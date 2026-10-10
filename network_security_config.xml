@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<network-security-config>
+    <!-- Workshop: trust Burp's CA (installed as @raw/root_admin_ch) for every domain -->
+    <base-config>
+        <trust-anchors>
+            <certificates src="system" />
+            <certificates src="@raw/root_admin_ch" />
+        </trust-anchors>
+    </base-config>
+    <!-- Workshop: the lab's issuer/verifier, served by the VM through Burp -->
+    <domain-config>
+        <domain includeSubdomains="true">viscon.swiyu</domain>
+        <trust-anchors>
+            <certificates src="@raw/root_admin_ch" />
+        </trust-anchors>
+    </domain-config>
+    <domain-config>
+        <domain includeSubdomains="false">mam-managed.bit.admin.ch</domain>
+        <trust-anchors>
+            <certificates src="@raw/swiss_government_root_ca_vi" />
+            <certificates src="@raw/root_admin_ch" />
+        </trust-anchors>
+    </domain-config>
+    <domain-config>
+        <domain includeSubdomains="false">wallet-ve-a.trust-infra.swiyu.admin.ch</domain>
+        <trust-anchors>
+            <certificates src="@raw/swiss_government_root_ca_vi" />
+            <certificates src="@raw/root_admin_ch" />
+        </trust-anchors>
+    </domain-config>
+    <domain-config>
+        <domain includeSubdomains="false">attestations-a.trust-infra.swiyu.admin.ch</domain>
+        <trust-anchors>
+            <certificates src="@raw/swiss_government_root_ca_vi" />
+            <certificates src="@raw/root_admin_ch" />
+        </trust-anchors>
+    </domain-config>
+    <domain-config>
+        <domain includeSubdomains="true">trust-infra.swiyu-int.admin.ch</domain>
+        <domain includeSubdomains="true">trust-infra.swiyu.admin.ch</domain>
+        <trust-anchors>
+            <certificates src="@raw/swiss_government_root_ca_vi" />
+            <certificates src="@raw/root_admin_ch" />
+        </trust-anchors>
+    </domain-config>
+</network-security-config>

@@ -131,8 +131,51 @@ source "vmware-iso" "eID" {
 	boot_wait = "5s" // In my tests it boots quite fast. 1s  was too fast, though...
 }
 
+// https://developer.hashicorp.com/packer/integrations/hashicorp/qemu/latest/components/builder/qemu
+source "qemu" "eID" {
+	iso_url           = var.iso_url
+	iso_checksum      = var.iso_hash
+
+	accelerator = "kvm"
+	cpu_model = "host" // Pass through the host CPU so nested virtualization works (like vhv_enabled for vmware)
+
+	cpus = 2
+	memory = 8192 // 8 GB of RAM
+
+	format = "qcow2"
+	disk_size = "40G"
+	// virtio-scsi shows up as /dev/sda in the guest, which is what grub-installer/bootdev in the preseed expects
+	disk_interface = "virtio-scsi"
+	net_device = "virtio-net"
+
+	communicator = "ssh"
+	ssh_username = "lab-user"
+	ssh_password = var.user_pass
+	ssh_timeout = "20m"
+
+	shutdown_command = "echo ${var.user_pass} | sudo -S /sbin/shutdown -h now"
+
+	vm_name = "eID_testlab.qcow2"
+
+	http_directory = "http_files"
+	boot_command = [
+		"<esc><wait>", // Same BIOS/isolinux boot prompt as the vmware build
+		"/install.amd/vmlinuz",
+		" initrd=/install.amd/initrd.gz",
+		" auto-install/enable=true",
+		" debconf/priority=critical",
+		" preseed/url=http://{{ .HTTPIP }}:{{ .HTTPPort }}/preseed.cfg <enter>",
+	]
+	boot_wait = "5s"
+}
+
+locals {
+	// The qemu builder is just called "qemu", not "qemu-iso"
+	source_name = var.hypervisor == "qemu" ? "qemu" : "${var.hypervisor}-iso"
+}
+
 build {
-	sources = ["source.${var.hypervisor}-iso.eID"]
+	sources = ["source.${local.source_name}.eID"]
 
 	// https://developer.hashicorp.com/packer/docs/provisioners/shell
 	provisioner "shell" {

@@ -15,4 +15,5 @@ verifier_tag = "4.2.0"
 # Possible values:
 #	parallels
 #	vmware
+#	qemu
 hypervisor = "vmware"
