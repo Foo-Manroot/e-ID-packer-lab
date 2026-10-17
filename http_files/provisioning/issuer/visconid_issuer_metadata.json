@@ -103,7 +103,7 @@
       ],
       "vct": "urn:vct:wololo.viscon",
       "vct_metadata_uri": "${external-url}/oid4vci/vct/my-vct-v01",
-      "vct_metadata_uri#integrity": "sha256-C2A4dcYDZIpN2ROte8xfcsNlBG0lLSXc0skqK36GwR4=",
+      "vct_metadata_uri#integrity": "sha256-EQyIEmO8fz2YmmkxZP9YJ+EADUMxpNUYZLjUYDWSFQg=",
       "claims": {
           "family_name": {
             "mandatory": true,
